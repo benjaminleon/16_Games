@@ -133,6 +133,7 @@ class player : public Entity
 {
 public:
   bool thrust;
+  bool brake;
 
   player() {
     name = "player";
@@ -144,9 +145,14 @@ public:
       dx += cos(angle * DEGTORAD) * 0.2;
       dy += sin(angle * DEGTORAD) * 0.2;
     }
+    else if (brake) {
+      dx *= 0.95;
+      dy *= 0.95;
+    }
     else {
       dx *= 0.99;
       dy *= 0.99;
+    
     }
 
     int maxSpeed = 15;

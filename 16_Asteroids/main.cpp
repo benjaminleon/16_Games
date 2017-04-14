@@ -31,7 +31,7 @@ int main()
   Animation sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
   Animation sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
 
-  spawnAsteroids(15, sRock);
+  spawnAsteroids(0, sRock);
   
   player *p = new player();
   p->settings(sPlayer, 200, 200, 0, 20);
@@ -63,6 +63,10 @@ int main()
       p->thrust = true;
     else
       p->thrust = false;
+    if (Keyboard::isKeyPressed(Keyboard::Down))
+      p->brake = true;
+    else
+      p->brake = false;
 
     for (auto a : entities)
       for (auto b : entities)
