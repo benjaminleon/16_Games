@@ -9,8 +9,6 @@ This is a fork from https://yadi.sk/d/uqz1HerKrKWjV
 ## Link and compile
 `sudo apt-get install libsfml-dev`
 
-g++ -c filename.cpp -std=c++11
+Run `chmod +x compile` in the terminal, and then
 
-g++ object_file.o -o output_name -lsfml-graphics -lsfml-window -lsfml-system -std=c++11
-
-Don't forget to run `chmod +x compile` in the terminal if you'd like to use the compile script
+`./compile`
