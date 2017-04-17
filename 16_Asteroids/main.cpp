@@ -103,7 +103,8 @@ int main()
           if (isCollide(a, b))
           {
             a->life = false;
-            b->life = false;
+            if (b->name == "bullet")
+              b->life = false;
 
             Entity *e = new Entity();
             e->settings(sExplosion, a->x, a->y);
