@@ -1,9 +1,13 @@
+#ifndef HELPING_FUNCTIONS_CPP
+#define HELPING_FUNCTIONS_CPP
+
 #include "global.h"
-#include "classes.cpp"
+#include "classes.h"
 #include <iostream>
 
 void removeFinishedExplosions()
 {
+  auto entities = Game::getInstance()->getEntities();
   for (auto e : entities)
     if (e->name == "explosion" || e->name == "bomb")
       if (e->anim.isEnd())
@@ -14,18 +18,24 @@ void randomlySpawnAsteroid(Animation sRock, Animation sRock_small)
 {
   if (rand() % 150 == 0)
   {
+    int H = Game::getInstance()->getHeight();
+
     asteroid *a = new asteroid();
 
+    a->set_state(0, rand() % H, rand() % 360, 25);
+
     if (rand() % 10 < 8)
-      a->settings(sRock, 0, rand() % H, rand() % 360, 25);
+      a->set_animation(sRock);
     else
-      a->settings(sRock_small, 0, rand() % H, rand() % 360, 25);
-    entities.push_back(a);
+      a->set_animation(sRock_small);
+
+    Game::getInstance()->getEntities().push_back(a);
   }
 }
 
 void updateEntitiesAndDeleteTheDead()
 {
+  auto entities = Game::getInstance()->getEntities();
   for (auto i = entities.begin(); i != entities.end();)
   {
     Entity *e = *i;
@@ -45,12 +55,13 @@ void updateEntitiesAndDeleteTheDead()
 
 void drawEverythingOn(sf::Sprite background)
 {
-  app.draw(background);
+  sf::RenderWindow * appPtr = Game::getInstance()->getApp();
+  appPtr->draw(background);
 
-  for (auto i : entities)
-    i->draw(app);
+  for (auto i : Game::getInstance()->getEntities())
+    i->draw(*appPtr);
 
-  app.display();
+  appPtr->display();
 }
 
 bool isCollide(Entity *a, Entity *b)
@@ -62,10 +73,17 @@ bool isCollide(Entity *a, Entity *b)
 
 void spawnAsteroids(int number, Animation sRock)
 {
+  int W = Game::getInstance()->getWidth();
+  int H = Game::getInstance()->getHeight();
   for (int i = 0; i < number; i++)
   {
     asteroid *a = new asteroid();
-    a->settings(sRock, rand() % W, rand() % H, rand() % 360, 25);
-    entities.push_back(a);
+    a->set_state(rand() % W, rand() % H, rand() % 360, 25);
+    a->set_animation(sRock);
+    Game::getInstance()->getEntities().push_back(a);
   }
 }
+
+//void updateCoolDownAnimation();
+
+#endif

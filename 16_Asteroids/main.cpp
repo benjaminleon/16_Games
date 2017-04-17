@@ -6,9 +6,12 @@ using namespace sf;
 
 int main()
 {
+  //Game * myGame = Game::getInstance;
   srand(time(0));
 
-  app.setFramerateLimit(60);
+  auto entities = Game::getInstance()->getEntities();
+
+  Game::getInstance()->getApp()->setFramerateLimit(60);
 
   t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
@@ -40,23 +43,25 @@ int main()
   spawnAsteroids(0, sRock);
 
   player *p = new player();
-  p->settings(sPlayer, 200, 200, 0, 20);
+  p->set_state(200, 200, 0, 20);
+  p->set_animation(sPlayer);
   entities.push_back(p);
 
   /////main loop/////
-  while (app.isOpen())
+  while (Game::getInstance()->getApp()->isOpen())
   {
     Event event;
-    while (app.pollEvent(event))
+    while (Game::getInstance()->getApp()->pollEvent(event))
     {
       if (event.type == Event::Closed)
-        app.close();
+        Game::getInstance()->getApp()->close();
 
       if (event.type == Event::KeyPressed)
         if (event.key.code == Keyboard::Space)
         {
           bullet *b = new bullet();
-          b->settings(sBullet, p->x, p->y, p->angle, 10);
+          b->set_state(p->x, p->y, p->angle, 10);
+          b->set_animation(sBullet);
           entities.push_back(b);
         }
         else if (event.key.code == Keyboard::LControl)
@@ -65,7 +70,8 @@ int main()
           {
             p->bombCoolDown = 100;
             bomb *b = new bomb();
-            b->settings(sBomb, p->x, p->y);
+            b->set_state(p->x, p->y, 0, 1);
+            b->set_animation(sBomb);
             entities.push_back(b);
           }
         }
@@ -109,7 +115,8 @@ int main()
               b->life = false;
 
             Entity *e = new Entity();
-            e->settings(sExplosion, a->x, a->y);
+            e->set_state((int) a->x, (int) a->y);
+            e->set_animation(sExplosion);
             e->name = "explosion";
             entities.push_back(e);
 
@@ -118,7 +125,8 @@ int main()
               if (a->R == 15)
                 continue;
               Entity *e = new asteroid();
-              e->settings(sRock_small, a->x, a->y, rand() % 360, 15);
+              e->set_state(a->x, a->y, rand() % 360, 15);
+              e->set_animation(sRock_small);
               entities.push_back(e);
             }
           }
@@ -129,11 +137,15 @@ int main()
             b->life = false;
 
             Entity *e = new Entity();
-            e->settings(sExplosion_ship, a->x, a->y);
+            e->set_state(a->x, a->y);
+            e->set_animation(sExplosion_ship);
             e->name = "explosion";
             entities.push_back(e);
 
-            p->settings(sPlayer, W / 2, H / 2, 0, 20);
+            int W = Game::getInstance()->getWidth();
+            int H = Game::getInstance()->getHeight();
+            p->set_state(W / 2, H / 2, 0, 20);
+            p->set_animation(sPlayer);
             p->dx = 0;
             p->dy = 0;
           }

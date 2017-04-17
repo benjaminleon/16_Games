@@ -5,7 +5,6 @@
 #include "global.h"
 #include "classes.h"
 
-
 Animation::Animation(){};
 Animation::Animation(sf::Texture &t, int x, int y, int w, int h, int count, float speed)
 {
@@ -39,13 +38,17 @@ Entity::Entity()
   life = 1;
 }
 
-void Entity::settings(Animation &a, int X, int Y, float Angle = 0, int radius = 1)
+void Entity::set_state(int X, int Y, float Angle, int radius)
 {
-  anim = a;
   x = X;
   y = Y;
   angle = Angle;
   R = radius;
+}
+
+void Entity::set_animation(Animation &a)
+{
+  anim = a;
 }
 
 void Entity::update(){};
@@ -80,6 +83,9 @@ void asteroid::update()
   x += dx;
   y += dy;
 
+  int W = Game::getInstance()->getWidth();
+  int H = Game::getInstance()->getHeight();
+
   if (x > W)
     x = 0;
   if (x < 0)
@@ -102,7 +108,8 @@ void bullet::update()
   x += dx;
   y += dy;
 
-  if (x > W || x < 0 || y > H || y < 0)
+  if (x > Game::getInstance()->getWidth() || x < 0 ||
+      y > Game::getInstance()->getHeight() || y < 0)
     life = 0;
 }
 
@@ -157,6 +164,9 @@ void player::update()
   x += dx;
   y += dy;
 
+  int W = Game::getInstance()->getWidth();
+  int H = Game::getInstance()->getHeight();
+
   if (x > W)
     x = 0;
   if (x < 0)
@@ -167,22 +177,39 @@ void player::update()
     y = H;
 }
 
-class Game
+Game *Game::getInstance()
 {
-public:
-  Game()
+  if (!instance_)
   {
-    sf::RenderWindow app(sf::VideoMode(1200, 800), "Asteroids!");
+    instance_ = (std::unique_ptr<Game>)new Game();
+    //instance_ = (Game *) new Game();
   }
-  int getWidth()
-  {
-    return W;
-  }
+  return instance_.get();
+  //return instance_;
+}
 
-private:
-  sf::RenderWindow app;
-  static const int W = 10;
-  const int H = 10;
-};
+Game::Game() : W(1800), H(1200)
+{
+  sf::RenderWindow app(sf::VideoMode(1200, 800), "Asteroids!");
+}
+
+std::list<Entity *> Game::getEntities()
+{
+    return entities;
+}
+
+sf::RenderWindow * Game::getApp(){
+  return &app;
+}
+
+int Game::getWidth()
+{
+  return W;
+}
+
+int Game::getHeight()
+{
+  return H;
+}
 
 #endif

@@ -1,3 +1,9 @@
+#ifndef _CLASSES_H
+#define _CLASSES_H
+
+#include <memory>
+#include <list>
+
 class Animation
 {
   public:
@@ -20,7 +26,8 @@ class Entity
     Animation anim;
 
     Entity();
-    void settings(Animation &a, int X, int Y, float Angle, int radius);
+    void set_state(int X, int Y, float Angle = 0, int radius = 1);
+    void set_animation(Animation &a);
     virtual void update();
     void draw(sf::RenderWindow &app);
     virtual ~Entity();
@@ -58,3 +65,24 @@ public:
   player();
   void update();
 };
+
+class Game
+{
+  public:
+    static Game* getInstance();
+    int getWidth();
+    int getHeight();
+    sf::RenderWindow * getApp();
+    std::list<class Entity *> getEntities();
+
+  private:
+    Game();
+    static std::unique_ptr<Game> instance_;
+    //Game* instance_;
+    const int W;
+    const int H;
+    sf::RenderWindow app;
+    std::list<class Entity *> entities;
+};
+
+#endif
