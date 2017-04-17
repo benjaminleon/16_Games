@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <list>
+#include <SFML/Graphics.hpp>
 
 class Animation
 {

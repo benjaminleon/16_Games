@@ -1,8 +1,8 @@
 #ifndef HELPING_FUNCTIONS_CPP
 #define HELPING_FUNCTIONS_CPP
 
-#include "global.h"
-#include "classes.h"
+#include "helping_functions.h"
+
 #include <iostream>
 
 void removeFinishedExplosions()

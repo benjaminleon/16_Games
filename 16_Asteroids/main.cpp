@@ -1,6 +1,7 @@
 #include <time.h>
 #include <list>
-#include "helping_functions.cpp"
+#include "helping_functions.h"
+#include "global.h"
 
 using namespace sf;
 
