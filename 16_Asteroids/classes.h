@@ -53,6 +53,7 @@ public:
   bool thrust;
   bool brake;
   std::string tilting;
+  int bombCoolDown;
 
   player();
   void update();

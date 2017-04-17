@@ -120,10 +120,14 @@ player::player()
 {
   name = "player";
   tilting = "nope";
+  bombCoolDown = 0;
 }
 
 void player::update()
 {
+  if (bombCoolDown > 0)
+    bombCoolDown -= 1;
+
   if (thrust)
   {
     dx += cos(angle * DEGTORAD) * 0.2;

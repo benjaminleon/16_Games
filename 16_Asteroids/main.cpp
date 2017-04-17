@@ -4,8 +4,6 @@
 
 using namespace sf;
 
-
-
 int main()
 {
   srand(time(0));
@@ -63,9 +61,13 @@ int main()
         }
         else if (event.key.code == Keyboard::LControl)
         {
-          bomb *b = new bomb();
-          b->settings(sBomb, p->x, p->y);
-          entities.push_back(b);
+          if (p->bombCoolDown == 0)
+          {
+            p->bombCoolDown = 100;
+            bomb *b = new bomb();
+            b->settings(sBomb, p->x, p->y);
+            entities.push_back(b);
+          }
         }
     }
 
