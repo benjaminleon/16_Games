@@ -1,4 +1,2 @@
 #!/usr/bin/env bash
 g++ main.cpp -o game -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
-
-# Don't forget to run `chmod +x compile` in the terminal

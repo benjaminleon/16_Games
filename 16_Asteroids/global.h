@@ -10,7 +10,7 @@ float DEGTORAD = 0.017453f;
 
 std::list<class Entity *> entities;
 
-sf::Texture t1, t2, t3, t4, t5, t6, t7;
+sf::Texture t1, t2, t3, t4, t5, t6, t7, t8;
 
 sf::RenderWindow app(sf::VideoMode(W, H), "Asteroids!");
 

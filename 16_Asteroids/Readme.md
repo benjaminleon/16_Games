@@ -1,0 +1,1 @@
+Don't forget to run `chmod +x compile` in the terminal

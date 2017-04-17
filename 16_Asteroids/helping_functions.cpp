@@ -64,5 +64,3 @@ void spawnAsteroids(int number, Animation sRock) {
     entities.push_back(a);
   }
 }
-
-

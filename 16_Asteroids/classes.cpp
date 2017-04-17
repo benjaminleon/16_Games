@@ -10,7 +10,7 @@ public:
   sf::Sprite sprite;
   std::vector<sf::IntRect> frames;
 
-  Animation() {} // Todo: Is this ever used?
+  Animation() {}
   Animation(sf::Texture &t, int x, int y, int w, int h, int count, float speed)
   {
     frameNumber = 0;
@@ -92,8 +92,7 @@ public:
     name = "asteroid";
   }
 
-  void update()
-  {
+  void update() {
     x += dx;
     y += dy;
 
@@ -120,7 +119,6 @@ public:
   {
     dx = cos(angle * DEGTORAD) * 6;
     dy = sin(angle * DEGTORAD) * 6;
-    // angle+=rand()%6-3;
     x += dx;
     y += dy;
 
@@ -134,9 +132,11 @@ class player : public Entity
 public:
   bool thrust;
   bool brake;
+  std::string tilting;
 
   player() {
     name = "player";
+    tilting = "nope";
   }
 
   void update()
@@ -152,8 +152,9 @@ public:
     else {
       dx *= 0.99;
       dy *= 0.99;
-    
     }
+
+    //sprite.setTextureRect(frames[(int)frameNumber]);
 
     int maxSpeed = 15;
     float speed = sqrt(dx * dx + dy * dy);

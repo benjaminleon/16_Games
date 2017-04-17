@@ -30,9 +30,13 @@ int main()
   Animation sPlayer(t1, 40, 0, 40, 40, 1, 0);
   Animation sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
   Animation sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
+  Animation sPlayer_tilt_right(t1, 80, 0, 40, 40, 1, 0);
+  Animation sPlayer_tilt_left(t1, 0, 0, 40, 40, 1, 0);
+  Animation sPlayer_tilt_right_go(t1, 80, 40, 40, 40, 1, 0);
+  Animation sPlayer_tilt_left_go(t1, 0, 40, 40, 40, 1, 0);
 
   spawnAsteroids(0, sRock);
-  
+
   player *p = new player();
   p->settings(sPlayer, 200, 200, 0, 20);
   entities.push_back(p);
@@ -56,13 +60,27 @@ int main()
     }
 
     if (Keyboard::isKeyPressed(Keyboard::Right))
+    {
       p->angle += 3;
-    if (Keyboard::isKeyPressed(Keyboard::Left))
+      p->tilting = "right";
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::Left))
+    {
       p->angle -= 3;
-    if (Keyboard::isKeyPressed(Keyboard::Up))
-      p->thrust = true;
+      p->tilting = "left";
+    }
     else
+      p->tilting = "nope";
+
+    if (Keyboard::isKeyPressed(Keyboard::Up))
+    {
+      p->thrust = true;
+    }
+    else
+    {
       p->thrust = false;
+    }
+
     if (Keyboard::isKeyPressed(Keyboard::Down))
       p->brake = true;
     else
@@ -108,10 +126,33 @@ int main()
           }
       }
 
+    // Set picture for space ship
     if (p->thrust)
-      p->anim = sPlayer_go;
+    {
+      if (p->tilting == "right")
+      {
+        p->anim = sPlayer_tilt_right_go;
+      }
+      else if (p->tilting == "left")
+      {
+        p->anim = sPlayer_tilt_left_go;
+      }
+      else
+        p->anim = sPlayer_go;
+    }
     else
-      p->anim = sPlayer;
+    {
+      if (p->tilting == "right")
+      {
+        p->anim = sPlayer_tilt_right;
+      }
+      else if (p->tilting == "left")
+      {
+        p->anim = sPlayer_tilt_left;
+      }
+      else
+        p->anim = sPlayer;
+    }
 
     removeFinishedExplosions();
 
@@ -120,7 +161,6 @@ int main()
     updateEntitiesAndDeleteTheDead();
 
     drawEverythingOn(background);
-    
   }
 
   return 0;
