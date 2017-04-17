@@ -85,14 +85,15 @@ public:
   asteroid()
   {
     //do {
-      dx = rand() % 8 - 4;
-      dy = rand() % 8 - 4;
+    dx = rand() % 8 - 4;
+    dy = rand() % 8 - 4;
     //} while (dx == 0 && dy == 0);
 
     name = "asteroid";
   }
 
-  void update() {
+  void update()
+  {
     x += dx;
     y += dy;
 
@@ -129,16 +130,16 @@ public:
 
 class bomb : public Entity
 {
-  public:
-    bomb()
-    {
-      name = "bomb";
-    }
+public:
+  bomb()
+  {
+    name = "bomb";
+  }
 
-    void update()
-    {
-      R += 10;
-    }
+  void update()
+  {
+    R += 10;
+  }
 };
 
 class player : public Entity
@@ -148,22 +149,26 @@ public:
   bool brake;
   std::string tilting;
 
-  player() {
+  player()
+  {
     name = "player";
     tilting = "nope";
   }
 
   void update()
   {
-    if (thrust) {
+    if (thrust)
+    {
       dx += cos(angle * DEGTORAD) * 0.2;
       dy += sin(angle * DEGTORAD) * 0.2;
     }
-    else if (brake) {
+    else if (brake)
+    {
       dx *= 0.95;
       dy *= 0.95;
     }
-    else {
+    else
+    {
       dx *= 0.99;
       dy *= 0.99;
     }
@@ -172,7 +177,8 @@ public:
 
     int maxSpeed = 15;
     float speed = sqrt(dx * dx + dy * dy);
-    if (speed > maxSpeed) {
+    if (speed > maxSpeed)
+    {
       dx *= maxSpeed / speed;
       dy *= maxSpeed / speed;
     }

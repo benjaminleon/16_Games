@@ -24,14 +24,17 @@ void randomlySpawnAsteroid(Animation sRock, Animation sRock_small)
   }
 }
 
-void updateEntitiesAndDeleteTheDead() {
-  for (auto i = entities.begin(); i != entities.end();) {
+void updateEntitiesAndDeleteTheDead()
+{
+  for (auto i = entities.begin(); i != entities.end();)
+  {
     Entity *e = *i;
 
     e->update();
     e->anim.update();
 
-    if (e->life == false) {
+    if (e->life == false)
+    {
       i = entities.erase(i);
       delete e;
     }
@@ -40,13 +43,14 @@ void updateEntitiesAndDeleteTheDead() {
   }
 }
 
-void drawEverythingOn(sf::Sprite background) {
+void drawEverythingOn(sf::Sprite background)
+{
   app.draw(background);
 
-    for (auto i : entities)
-      i->draw(app);
+  for (auto i : entities)
+    i->draw(app);
 
-    app.display();
+  app.display();
 }
 
 bool isCollide(Entity *a, Entity *b)
@@ -56,7 +60,8 @@ bool isCollide(Entity *a, Entity *b)
          (a->R + b->R) * (a->R + b->R);
 }
 
-void spawnAsteroids(int number, Animation sRock) {
+void spawnAsteroids(int number, Animation sRock)
+{
   for (int i = 0; i < number; i++)
   {
     asteroid *a = new asteroid();

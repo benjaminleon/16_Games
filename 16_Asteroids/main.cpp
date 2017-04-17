@@ -55,13 +55,13 @@ int main()
       if (event.type == Event::KeyPressed)
         if (event.key.code == Keyboard::Space)
         {
-          bullet * b = new bullet();
+          bullet *b = new bullet();
           b->settings(sBullet, p->x, p->y, p->angle, 10);
           entities.push_back(b);
         }
         else if (event.key.code == Keyboard::LControl)
         {
-          bomb * b = new bomb();
+          bomb *b = new bomb();
           b->settings(sBomb, p->x, p->y);
           entities.push_back(b);
         }
@@ -97,7 +97,7 @@ int main()
     for (auto a : entities)
       for (auto b : entities)
       {
-        if (a->name == "asteroid" && ( (b->name == "bullet") || (b->name == "bomb")) )
+        if (a->name == "asteroid" && ((b->name == "bullet") || (b->name == "bomb")))
           if (isCollide(a, b))
           {
             a->life = false;
