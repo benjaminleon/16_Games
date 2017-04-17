@@ -127,6 +127,20 @@ public:
   }
 };
 
+class bomb : public Entity
+{
+  public:
+    bomb()
+    {
+      name = "bomb";
+    }
+
+    void update()
+    {
+      R += 10;
+    }
+};
+
 class player : public Entity
 {
 public:

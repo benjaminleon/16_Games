@@ -17,6 +17,7 @@ int main()
   t5.loadFromFile("images/fire_blue.png");
   t6.loadFromFile("images/rock_small.png");
   t7.loadFromFile("images/explosions/type_B.png");
+  t8.loadFromFile("images/explosions/type_D.png");
 
   t1.setSmooth(true);
   t2.setSmooth(true);
@@ -34,6 +35,7 @@ int main()
   Animation sPlayer_tilt_left(t1, 0, 0, 40, 40, 1, 0);
   Animation sPlayer_tilt_right_go(t1, 80, 40, 40, 40, 1, 0);
   Animation sPlayer_tilt_left_go(t1, 0, 40, 40, 40, 1, 0);
+  Animation sBomb(t8, 0, 0, 256, 256, 19, 1);
 
   spawnAsteroids(0, sRock);
 
@@ -53,8 +55,14 @@ int main()
       if (event.type == Event::KeyPressed)
         if (event.key.code == Keyboard::Space)
         {
-          bullet *b = new bullet();
+          bullet * b = new bullet();
           b->settings(sBullet, p->x, p->y, p->angle, 10);
+          entities.push_back(b);
+        }
+        else if (event.key.code == Keyboard::LControl)
+        {
+          bomb * b = new bomb();
+          b->settings(sBomb, p->x, p->y);
           entities.push_back(b);
         }
     }
@@ -89,7 +97,7 @@ int main()
     for (auto a : entities)
       for (auto b : entities)
       {
-        if (a->name == "asteroid" && b->name == "bullet")
+        if (a->name == "asteroid" && ( (b->name == "bullet") || (b->name == "bomb")) )
           if (isCollide(a, b))
           {
             a->life = false;

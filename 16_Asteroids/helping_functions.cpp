@@ -5,7 +5,7 @@
 void removeFinishedExplosions()
 {
   for (auto e : entities)
-    if (e->name == "explosion")
+    if (e->name == "explosion" || e->name == "bomb")
       if (e->anim.isEnd())
         e->life = 0;
 }
