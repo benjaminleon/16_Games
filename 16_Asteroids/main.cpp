@@ -1,20 +1,21 @@
 #include <time.h>
 #include <list>
+#include "classes.h"
 #include "helping_functions.h"
 #include "global.h"
+
+#include <iostream>
 
 using namespace sf;
 
 int main()
 {
-  //Game * myGame = Game::getInstance;
   srand(time(0));
-
-  auto entities = Game::getInstance()->getEntities();
 
   Game::getInstance()->getApp()->setFramerateLimit(60);
 
-  t1.loadFromFile("images/spaceship.png");
+  sf::Texture t1, t2, t3, t4, t5, t6, t7, t8;
+  auto returnValue = t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
   t3.loadFromFile("images/explosions/type_C.png");
   t4.loadFromFile("images/rock.png");
@@ -28,13 +29,13 @@ int main()
 
   sf::Sprite background(t2);
 
-  Animation sExplosion(t3, 0, 0, 256, 256, 48, 0.5);
+  Animation sExplosion(t3, 0, 0, 256, 256, 32, 0.5);
   Animation sRock(t4, 0, 0, 64, 64, 16, 0.2);
   Animation sRock_small(t6, 0, 0, 64, 64, 16, 0.2);
   Animation sBullet(t5, 0, 0, 32, 64, 16, 0.8);
   Animation sPlayer(t1, 40, 0, 40, 40, 1, 0);
   Animation sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
-  Animation sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
+  Animation sExplosion_ship(t7, 0, 0, 192, 192, 42, 0.5);
   Animation sPlayer_tilt_right(t1, 80, 0, 40, 40, 1, 0);
   Animation sPlayer_tilt_left(t1, 0, 0, 40, 40, 1, 0);
   Animation sPlayer_tilt_right_go(t1, 80, 40, 40, 40, 1, 0);
@@ -46,7 +47,7 @@ int main()
   player *p = new player();
   p->set_state(200, 200, 0, 20);
   p->set_animation(sPlayer);
-  entities.push_back(p);
+  Game::getInstance()->getEntities()->push_back(p);
 
   /////main loop/////
   while (Game::getInstance()->getApp()->isOpen())
@@ -63,7 +64,7 @@ int main()
           bullet *b = new bullet();
           b->set_state(p->x, p->y, p->angle, 10);
           b->set_animation(sBullet);
-          entities.push_back(b);
+          Game::getInstance()->getEntities()->push_back(b);
         }
         else if (event.key.code == Keyboard::LControl)
         {
@@ -73,7 +74,7 @@ int main()
             bomb *b = new bomb();
             b->set_state(p->x, p->y, 0, 1);
             b->set_animation(sBomb);
-            entities.push_back(b);
+            Game::getInstance()->getEntities()->push_back(b);
           }
         }
     }
@@ -105,8 +106,8 @@ int main()
     else
       p->brake = false;
 
-    for (auto a : entities)
-      for (auto b : entities)
+    for (auto a : *(Game::getInstance()->getEntities()))
+      for (auto b : *(Game::getInstance()->getEntities()))
       {
         if (a->name == "asteroid" && ((b->name == "bullet") || (b->name == "bomb")))
           if (isCollide(a, b))
@@ -116,20 +117,20 @@ int main()
               b->life = false;
 
             Entity *e = new Entity();
-            e->set_state((int) a->x, (int) a->y);
+            e->set_state((int)a->x, (int)a->y);
             e->set_animation(sExplosion);
             e->name = "explosion";
-            entities.push_back(e);
+            Game::getInstance()->getEntities()->push_back(e);
 
-            for (int i = 0; i < 2; i++) // why two times?
-            {
-              if (a->R == 15)
-                continue;
-              Entity *e = new asteroid();
-              e->set_state(a->x, a->y, rand() % 360, 15);
-              e->set_animation(sRock_small);
-              entities.push_back(e);
-            }
+            // A large rock explodes into 2 small ones
+            if (a->R != 15)
+              for (int i = 0; i < 2; i++)
+              {
+                Entity *e = new asteroid();
+                e->set_state(a->x, a->y, rand() % 360, 15);
+                e->set_animation(sRock_small);
+                Game::getInstance()->getEntities()->push_back(e);
+              }
           }
 
         if (a->name == "player" && b->name == "asteroid")
@@ -141,7 +142,7 @@ int main()
             e->set_state(a->x, a->y);
             e->set_animation(sExplosion_ship);
             e->name = "explosion";
-            entities.push_back(e);
+            Game::getInstance()->getEntities()->push_back(e);
 
             int W = Game::getInstance()->getWidth();
             int H = Game::getInstance()->getHeight();
@@ -181,13 +182,9 @@ int main()
     }
 
     removeFinishedExplosions();
-
     randomlySpawnAsteroid(sRock, sRock_small);
-
     updateEntitiesAndDeleteTheDead();
-
     drawEverythingOn(background);
   }
-
   return 0;
 }

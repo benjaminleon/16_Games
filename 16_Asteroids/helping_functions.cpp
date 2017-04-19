@@ -7,11 +7,11 @@
 
 void removeFinishedExplosions()
 {
-  auto entities = Game::getInstance()->getEntities();
+  auto entities = *(Game::getInstance()->getEntities());
   for (auto e : entities)
     if (e->name == "explosion" || e->name == "bomb")
       if (e->anim.isEnd())
-        e->life = 0;
+        e->life = false;
 }
 
 void randomlySpawnAsteroid(Animation sRock, Animation sRock_small)
@@ -19,9 +19,7 @@ void randomlySpawnAsteroid(Animation sRock, Animation sRock_small)
   if (rand() % 150 == 0)
   {
     int H = Game::getInstance()->getHeight();
-
     asteroid *a = new asteroid();
-
     a->set_state(0, rand() % H, rand() % 360, 25);
 
     if (rand() % 10 < 8)
@@ -29,14 +27,14 @@ void randomlySpawnAsteroid(Animation sRock, Animation sRock_small)
     else
       a->set_animation(sRock_small);
 
-    Game::getInstance()->getEntities().push_back(a);
+    Game::getInstance()->getEntities()->push_back(a);
   }
 }
 
 void updateEntitiesAndDeleteTheDead()
 {
   auto entities = Game::getInstance()->getEntities();
-  for (auto i = entities.begin(); i != entities.end();)
+  for (auto i = entities->begin(); i != entities->end();)
   {
     Entity *e = *i;
 
@@ -45,7 +43,7 @@ void updateEntitiesAndDeleteTheDead()
 
     if (e->life == false)
     {
-      i = entities.erase(i);
+      i = entities->erase(i);
       delete e;
     }
     else
@@ -55,10 +53,10 @@ void updateEntitiesAndDeleteTheDead()
 
 void drawEverythingOn(sf::Sprite background)
 {
-  sf::RenderWindow * appPtr = Game::getInstance()->getApp();
+  sf::RenderWindow *appPtr = Game::getInstance()->getApp();
   appPtr->draw(background);
 
-  for (auto i : Game::getInstance()->getEntities())
+  for (auto i : *(Game::getInstance()->getEntities()))
     i->draw(*appPtr);
 
   appPtr->display();
@@ -80,7 +78,7 @@ void spawnAsteroids(int number, Animation sRock)
     asteroid *a = new asteroid();
     a->set_state(rand() % W, rand() % H, rand() % 360, 25);
     a->set_animation(sRock);
-    Game::getInstance()->getEntities().push_back(a);
+    Game::getInstance()->getEntities()->push_back(a);
   }
 }
 

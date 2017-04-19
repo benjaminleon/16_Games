@@ -5,6 +5,8 @@
 #include "global.h"
 #include "classes.h"
 
+Game *Game::instance_ = NULL;
+
 Animation::Animation(){};
 Animation::Animation(sf::Texture &t, int x, int y, int w, int h, int count, float speed)
 {
@@ -181,25 +183,25 @@ Game *Game::getInstance()
 {
   if (!instance_)
   {
-    instance_ = (std::unique_ptr<Game>)new Game();
-    //instance_ = (Game *) new Game();
+    instance_ = (Game *)new Game();
   }
-  return instance_.get();
-  //return instance_;
+  return instance_;
 }
 
-Game::Game() : W(1800), H(1200)
+Game::Game() : W(1200), H(800)
 {
-  sf::RenderWindow app(sf::VideoMode(1200, 800), "Asteroids!");
+  app = new sf::RenderWindow(sf::VideoMode(W, H), "Asteroids!");
+  entities = new std::list<class Entity *>;
 }
 
-std::list<Entity *> Game::getEntities()
+std::list<Entity *> * Game::getEntities()
 {
-    return entities;
+  return entities;
 }
 
-sf::RenderWindow * Game::getApp(){
-  return &app;
+sf::RenderWindow *Game::getApp()
+{
+  return app;
 }
 
 int Game::getWidth()
