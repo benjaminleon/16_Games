@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-g++ main.cpp -o game -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
+g++ main.cpp helping_functions.cpp classes.cpp -o game -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system
