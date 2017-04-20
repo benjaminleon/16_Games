@@ -51,13 +51,15 @@ void updateEntitiesAndDeleteTheDead()
   }
 }
 
-void drawEverythingOn(sf::Sprite background)
+void drawEverythingOn(sf::Sprite background, coolDownAnimation *c)
 {
   sf::RenderWindow *appPtr = Game::getInstance()->getApp();
   appPtr->draw(background);
 
   for (auto i : *(Game::getInstance()->getEntities()))
     i->draw(*appPtr);
+
+  c->draw(*appPtr);
 
   appPtr->display();
 }

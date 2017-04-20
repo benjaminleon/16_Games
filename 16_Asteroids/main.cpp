@@ -14,8 +14,8 @@ int main()
 
   Game::getInstance()->getApp()->setFramerateLimit(60);
 
-  sf::Texture t1, t2, t3, t4, t5, t6, t7, t8;
-  auto returnValue = t1.loadFromFile("images/spaceship.png");
+  sf::Texture t1, t2, t3, t4, t5, t6, t7, t8, t9;
+  t1.loadFromFile("images/spaceship.png");
   t2.loadFromFile("images/background.jpg");
   t3.loadFromFile("images/explosions/type_C.png");
   t4.loadFromFile("images/rock.png");
@@ -23,6 +23,7 @@ int main()
   t6.loadFromFile("images/rock_small.png");
   t7.loadFromFile("images/explosions/type_B.png");
   t8.loadFromFile("images/explosions/type_D.png");
+  t9.loadFromFile("images/bombCoolDown.png");
 
   t1.setSmooth(true);
   t2.setSmooth(true);
@@ -41,6 +42,7 @@ int main()
   Animation sPlayer_tilt_right_go(t1, 80, 40, 40, 40, 1, 0);
   Animation sPlayer_tilt_left_go(t1, 0, 40, 40, 40, 1, 0);
   Animation sBomb(t8, 0, 0, 256, 256, 19, 1);
+  Animation sCoolDown(t9, 0, 0, 256, 256, NR_OF_CD_FRAMES, 0);
 
   spawnAsteroids(0, sRock);
 
@@ -48,6 +50,9 @@ int main()
   p->set_state(200, 200, 0, 20);
   p->set_animation(sPlayer);
   Game::getInstance()->getEntities()->push_back(p);
+
+  coolDownAnimation *c = new coolDownAnimation(100, 100);
+  c->set_animation(sCoolDown);
 
   /////main loop/////
   while (Game::getInstance()->getApp()->isOpen())
@@ -70,7 +75,7 @@ int main()
         {
           if (p->bombCoolDown == 0)
           {
-            p->bombCoolDown = 100;
+            p->bombCoolDown = FULL_COOLDOWN;
             bomb *b = new bomb();
             b->set_state(p->x, p->y, 0, 1);
             b->set_animation(sBomb);
@@ -184,7 +189,10 @@ int main()
     removeFinishedExplosions();
     randomlySpawnAsteroid(sRock, sRock_small);
     updateEntitiesAndDeleteTheDead();
-    drawEverythingOn(background);
+
+    c->update();
+
+    drawEverythingOn(background, c);
   }
   return 0;
 }

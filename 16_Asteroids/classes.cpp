@@ -70,6 +70,33 @@ void Entity::draw(sf::RenderWindow &app)
 
 Entity::~Entity(){};
 
+coolDownAnimation::coolDownAnimation(float x, float y)
+{
+  this->x = x;
+  this->y = y;
+}
+
+void coolDownAnimation::update()
+{
+  anim.sprite.setPosition(x, y);
+
+  int coolDown = static_cast<player *>(Game::getInstance()->getEntities()->front())->bombCoolDown;
+  int backwardsIndex = coolDown * (float)NR_OF_CD_FRAMES / (float)FULL_COOLDOWN;
+  int spriteNr = std::max(0, NR_OF_CD_FRAMES - 1 - backwardsIndex);
+  anim.sprite.setTextureRect(anim.frames[spriteNr]);
+}
+
+void coolDownAnimation::set_animation(Animation &a)
+{
+  anim = a;
+}
+
+void coolDownAnimation::draw(sf::RenderWindow &app)
+{
+  anim.sprite.setPosition(this->x, this->y);
+  app.draw(anim.sprite);
+}
+
 asteroid::asteroid()
 {
   //do {
@@ -194,7 +221,7 @@ Game::Game() : W(1200), H(800)
   entities = new std::list<class Entity *>;
 }
 
-std::list<Entity *> * Game::getEntities()
+std::list<Entity *> *Game::getEntities()
 {
   return entities;
 }

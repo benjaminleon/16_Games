@@ -14,7 +14,7 @@ public:
 
   Animation();
   Animation(sf::Texture &t, int x, int y, int w, int h, int count, float speed);
-  void update();
+  virtual void update();
   bool isEnd();
 };
 
@@ -67,6 +67,18 @@ public:
   void update();
 };
 
+class coolDownAnimation
+{
+public:
+  float x, y;
+  Animation anim;
+
+  coolDownAnimation(float, float);
+  void set_animation(Animation &a);
+  void update();
+  void draw(sf::RenderWindow &app);
+};
+
 class Game
 {
 public:
@@ -74,7 +86,7 @@ public:
   int getWidth();
   int getHeight();
   sf::RenderWindow *getApp();
-  std::list<class Entity *> * getEntities();
+  std::list<class Entity *> *getEntities();
 
 private:
   //static std::unique_ptr<Game> instance_;
