@@ -1,1 +1,2 @@
-![](https://github.com/benjaminleon/16_Games/blob/master/16_Asteroids/images/doodle_jump.png)
+![](https://github.com/benjaminleon/16_Games/blob/master/16_Asteroids/images/asteroids.png)
+
