@@ -17,6 +17,12 @@ enum platformType
     boost
 };
 
+enum xDirection
+{
+    left = -1,
+    right = 1
+};
+
 int main()
 {
     srand(time(0));
@@ -38,7 +44,7 @@ int main()
 
     Sprite sBackground(t1), sPlat(t2), sPers(t3), sPlatWeak(t4), sPlatBoost(t5);
 
-    const int NR_OF_PLATFORMS = 5;
+    const int NR_OF_PLATFORMS = 8;
     point plat[NR_OF_PLATFORMS];
 
     // Initialize platforms
@@ -46,12 +52,16 @@ int main()
     {
         plat[i].x = rand() % SCREEN_WIDTH;
         plat[i].y = rand() % SCREEN_HEIGHT;
-        plat[i].mode = rand() % 3;
+        plat[i].mode = rand() % 3;  // Three different platforms
     }
 
-    int x = 100, y = SCREEN_HEIGHT, moveHigherThreshold = SCREEN_HEIGHT * 2 / 3;
+    float x = 100;
+    int y = SCREEN_HEIGHT, moveHigherThreshold = SCREEN_HEIGHT * 2 / 3;
     float ySpeed = 0;
     bool falling = false;
+    int lastHorizontalDir = xDirection::right;
+    int coolDown = 0;
+    float dx = 0;
 
     while (app.isOpen())
     {
@@ -63,9 +73,31 @@ int main()
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Right))
+        {
             x += 3;
+            lastHorizontalDir = xDirection::right;
+        }
         if (Keyboard::isKeyPressed(Keyboard::Left))
+        {
             x -= 3;
+            lastHorizontalDir = xDirection::left;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::LControl))
+        {
+            if (coolDown <= 0)
+            {
+                coolDown = 100;
+                dx = 20 * lastHorizontalDir;
+            }
+        }
+        x += dx;
+        dx *= 0.95;
+        if (abs(dx) < 0.7)
+            dx = 0;
+
+        if (--coolDown < 0)
+            coolDown = 0;
 
         if (x > SCREEN_WIDTH)
             x = -DIST_TO_RIGHT_FOOT;
@@ -103,15 +135,15 @@ int main()
                 if (falling)
                 {
                     if (plat[i].mode != platformType::boost)
-                        {
-                            ySpeed = 10;
+                    {
+                        ySpeed = 10;
 
-                            if (plat[i].mode == platformType::weak)
-                            {
-                                plat[i].x = rand() % SCREEN_WIDTH;
-                                plat[i].x = SCREEN_HEIGHT;
-                            }
+                        if (plat[i].mode == platformType::weak)
+                        {
+                            plat[i].x = rand() % SCREEN_WIDTH;
+                            plat[i].x = SCREEN_HEIGHT;
                         }
+                    }
                 }
                 else
                 {
