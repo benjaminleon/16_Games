@@ -7,6 +7,14 @@ using namespace sf;
 struct point
 {
     int x, y;
+    int mode;
+};
+
+enum platformType
+{
+    strong,
+    weak,
+    boost
 };
 
 int main()
@@ -18,22 +26,26 @@ int main()
     RenderWindow app(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Doodle Game!");
     app.setFramerateLimit(60);
 
-    Texture t1, t2, t3;
+    Texture t1, t2, t3, t4;
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/platform.png");
     t3.loadFromFile("images/doodle.png");
+    t4.loadFromFile("images/platform_yellow.png");
+
     const int DIST_TO_RIGHT_FOOT = 50;
     const int DIST_TO_LEFT_FOOT = 20;
 
-    Sprite sBackground(t1), sPlat(t2), sPers(t3);
+    Sprite sBackground(t1), sPlat(t2), sPers(t3), sPlatWeak(t4);
 
     const int NR_OF_PLATFORMS = 10;
     point plat[NR_OF_PLATFORMS];
 
+    // Initialize platforms
     for (int i = 0; i < NR_OF_PLATFORMS; i++)
     {
         plat[i].x = rand() % SCREEN_WIDTH;
         plat[i].y = rand() % SCREEN_HEIGHT;
+        plat[i].mode = (rand() % 2 > 0) ? platformType::weak : platformType::strong;
     }
 
     int x = 100, y = SCREEN_HEIGHT, moveHigherThreshold = SCREEN_HEIGHT * 2 / 3;
@@ -86,6 +98,12 @@ int main()
             if ((x + DIST_TO_RIGHT_FOOT > plat[i].x) && (x + DIST_TO_LEFT_FOOT < plat[i].x + 68) && (y - 70 > plat[i].y) && (y - 70 < plat[i].y + 14) && falling)
             {
                 ySpeed = 10;
+                
+                if (plat[i].mode == platformType::weak)
+                {
+                    plat[i].x = rand() % SCREEN_WIDTH;
+                    plat[i].x = SCREEN_HEIGHT;
+                }
             }
 
         sPers.setPosition(x, SCREEN_HEIGHT - y); // (0, 0) is at top left
@@ -94,8 +112,17 @@ int main()
         app.draw(sPers);
         for (int i = 0; i < NR_OF_PLATFORMS; i++)
         {
-            sPlat.setPosition(plat[i].x, SCREEN_HEIGHT - plat[i].y);
-            app.draw(sPlat);
+            if (plat[i].mode == platformType::weak)
+            {
+                sPlatWeak.setPosition(plat[i].x, SCREEN_HEIGHT - plat[i].y);
+                app.draw(sPlatWeak);
+            }
+
+            else if (plat[i].mode == platformType::strong)
+            {
+                sPlat.setPosition(plat[i].x, SCREEN_HEIGHT - plat[i].y);
+                app.draw(sPlat);
+            }
         }
 
         app.display();
